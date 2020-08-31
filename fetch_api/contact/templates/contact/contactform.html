@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+  </head>
+  <body style="text-align: center; display: block">
+</div>
+<p id="output-message"></p>
+
+
+    <form action="{% url 'contact' %}"  id="formdata" method="POST" role="form" class="contactForm">
+      {% csrf_token %}
+
+                <input type="text" name="name" id="name" class="form-control"  placeholder="Your Name"  required> <br><br><br>
+              
+                <input type="email" class="form-control" name="email" id="email"  placeholder="Your Email"  required>
+                <br><br><br>
+            
+            
+         
+              <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject"  required> <br><br>
+           
+           <input type="submit" id="conctactsub" value="contact us">
+           
+</form>
+
+<script type="text/javascript">
+
+
+  document.getElementById("formdata").addEventListener("submit", function(e){
+  e.preventDefault();
+  //var url = '/'
+  name = document.getElementById("name").value;
+  email = document.getElementById("email").value;
+  subject = document.getElementById("subject").value
+const formData = new FormData();
+
+//console.log(name);
+formData.append('name', name);
+formData.append('email', email);
+formData.append('subject', subject);
+formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+console.log(formData);
+fetch('{% url "contact" %}', {
+  method: 'POST',
+  body: formData
+})
+.then(response => response.json())
+.then(data => {
+  console.log('Success:', data);
+  document.getElementById("name").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("subject").value = "";
+  document.getElementById("output-message").innerText = "Your enquiry has been sent!"
+  setTimeout(function(){ 
+  document.getElementById("output-message").style.display = "none";
+   }, 3000);
+  setTimeout(function(){ 
+  document.getElementById("output-message").style.display = "";
+   }, 1000);
+
+ 
+ 
+ 
+})
+.catch(error => {
+  console.error('Error:', error);
+  document.getElementById("output-message").innerText = "Sorry! There was an error submitting your enquiry. "
+  setTimeout(function(){ 
+  document.getElementById("output-message").style.display = "none";
+   }, 3000);
+  setTimeout(function(){ 
+  document.getElementById("output-message").style.display = "";
+   }, 1000);
+
+});
+
+
+
+});
+
+</script>
+
+
+
